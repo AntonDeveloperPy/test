@@ -29,10 +29,10 @@ KV = '''
 MDScreen:
 
 
-
     MDBottomNavigation:
         selected_color_background: "orange"
         text_color_active: "lightgrey"
+        
 
         MDBottomNavigationItem:
             name: 'screen 1'
@@ -45,9 +45,18 @@ MDScreen:
                         text: "Set theme"
 
 
+
+
         MDBottomNavigationItem:
             name: 'screen 2'
             text: ''
+            MDTextField:
+                id: text_field_error
+                hint_text: "Helper text on error (press 'Enter')"
+                helper_text: "There will always be a mistake"
+                helper_text_mode: "on_error"
+                pos_hint: {"center_x": .5, "center_y": .5}
+                size_hint_x: .5
 
         MDBottomNavigationItem:
             name: 'screen 3'
@@ -96,16 +105,28 @@ MDScreen:
 
 
 class Test(MDApp):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.theme_cls.theme_style = "Dark"
+        self.screen = Builder.load_string(KV)
+
     def build(self):
-        self.theme_cls.theme_style_switch_animation = True
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
-        return Builder.load_string(KV)
+        self.screen.ids.text_field_error.bind(
+            on_text_validate=self.set_error_message,
+            on_focus=self.set_error_message,
+        )
+        return self.screen
 
     def switch_theme_style(self):
         self.theme_cls.theme_style = (
             "Dark" if self.theme_cls.theme_style == "Light" else "Light"
         )
+
+    def set_error_message(self, instance_textfield):
+        if 'd':
+            print('d')
 
 
 Test().run()
